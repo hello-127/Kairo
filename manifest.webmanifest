@@ -1,6 +1,6 @@
 {
-  "name": "Peak Planner",
-  "short_name": "Peak",
+  "name": "Kairo",
+  "short_name": "Kairo",
   "description": "Uni and life planner with grades, rewards and stats",
   "start_url": "./#/today",
   "scope": "./",

@@ -1,5 +1,5 @@
-/* Peak service worker: offline app shell + phone notifications */
-const CACHE = 'peak-v1';
+/* Kairo service worker: offline app shell + phone notifications */
+const CACHE = 'kairo-v2';
 const SHELL = ['./', './index.html', './config.js', './manifest.webmanifest', './icons/icon-192.png'];
 
 self.addEventListener('install', (event) => {
@@ -55,7 +55,7 @@ self.addEventListener('fetch', (event) => {
 self.addEventListener('push', (event) => {
   let data = {};
   try { data = event.data ? event.data.json() : {}; } catch (e) { data = { body: event.data && event.data.text() }; }
-  const title = data.title || 'Peak';
+  const title = data.title || 'Kairo';
   event.waitUntil(self.registration.showNotification(title, {
     body: data.body || '',
     icon: 'icons/icon-192.png',
