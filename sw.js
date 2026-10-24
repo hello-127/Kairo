@@ -1,5 +1,5 @@
 /* Kairo service worker: offline app shell + phone notifications */
-const CACHE = 'kairo-v3';
+const CACHE = 'kairo-v4';
 const SHELL = ['./', './index.html', './config.js', './manifest.webmanifest', './icons/icon-192.png'];
 
 self.addEventListener('install', (event) => {
@@ -59,8 +59,8 @@ self.addEventListener('push', (event) => {
   event.waitUntil(self.registration.showNotification(title, {
     body: data.body || '',
     icon: 'icons/icon-192.png',
-    badge: 'icons/icon-192.png',
-    tag: data.tag || 'peak-summary',
+    badge: 'icons/badge-96.png',
+    tag: data.tag || 'kairo-summary',
     data: { url: data.url || './#/today' },
   }));
 });
