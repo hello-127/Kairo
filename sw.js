@@ -1,5 +1,5 @@
 /* Kairo service worker: offline app shell + phone notifications */
-const CACHE = 'kairo-v4';
+const CACHE = 'kairo-v5';
 const SHELL = ['./', './index.html', './config.js', './manifest.webmanifest', './icons/icon-192.png'];
 
 self.addEventListener('install', (event) => {
@@ -26,7 +26,7 @@ self.addEventListener('fetch', (event) => {
   if (req.mode === 'navigate') {
     event.respondWith(
       fetch(req.url, { cache: 'no-cache', credentials: 'same-origin' })
-        .then((res) => { const copy = res.clone(); caches.open(CACHE).then((c) => c.put('./index.html', copy)); return res; })
+        .then((res) => { if (res.ok) { const copy = res.clone(); caches.open(CACHE).then((c) => c.put('./index.html', copy)); } return res; })
         .catch(() => caches.match('./index.html'))
     );
     return;
@@ -35,8 +35,10 @@ self.addEventListener('fetch', (event) => {
   // Hashed build files and fonts: cache first
   if (url.pathname.includes('/assets/') || url.hostname.includes('fonts.g')) {
     event.respondWith(
-      caches.match(req).then((hit) => hit || fetch(req).then((res) => {
-        const copy = res.clone(); caches.open(CACHE).then((c) => c.put(req, copy)); return res;
+      caches.match(req).then((hit) => (hit && hit.ok) ? hit : fetch(req).then((res) => {
+        // only keep good copies: a missing file during a deploy must never be saved
+        if (res.ok || res.type === 'opaque') { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(req, copy)); }
+        return res;
       }))
     );
     return;
@@ -46,7 +48,7 @@ self.addEventListener('fetch', (event) => {
   if (url.origin === self.location.origin) {
     event.respondWith(
       fetch(req, { cache: 'no-cache' })
-        .then((res) => { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(req, copy)); return res; })
+        .then((res) => { if (res.ok) { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(req, copy)); } return res; })
         .catch(() => caches.match(req))
     );
   }
