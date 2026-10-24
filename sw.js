@@ -1,5 +1,5 @@
 /* Kairo service worker: offline app shell + phone notifications */
-const CACHE = 'kairo-v2';
+const CACHE = 'kairo-v3';
 const SHELL = ['./', './index.html', './config.js', './manifest.webmanifest', './icons/icon-192.png'];
 
 self.addEventListener('install', (event) => {
@@ -25,7 +25,7 @@ self.addEventListener('fetch', (event) => {
   // Page loads: network first, fall back to the cached app
   if (req.mode === 'navigate') {
     event.respondWith(
-      fetch(req)
+      fetch(req.url, { cache: 'no-cache', credentials: 'same-origin' })
         .then((res) => { const copy = res.clone(); caches.open(CACHE).then((c) => c.put('./index.html', copy)); return res; })
         .catch(() => caches.match('./index.html'))
     );
@@ -45,7 +45,7 @@ self.addEventListener('fetch', (event) => {
   // Everything else from this site: use the network, keep a copy for offline
   if (url.origin === self.location.origin) {
     event.respondWith(
-      fetch(req)
+      fetch(req, { cache: 'no-cache' })
         .then((res) => { const copy = res.clone(); caches.open(CACHE).then((c) => c.put(req, copy)); return res; })
         .catch(() => caches.match(req))
     );
