@@ -1,6 +1,6 @@
 /* Kairo service worker: offline app shell + phone notifications */
-const CACHE = 'kairo-v5';
-const SHELL = ['./', './index.html', './config.js', './manifest.webmanifest', './icons/icon-192.png'];
+const CACHE = 'kairo-v6';
+const SHELL = ['./', './index.html', './config.js', './manifest.webmanifest', './icons/icon-192-v2.png'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
@@ -60,7 +60,7 @@ self.addEventListener('push', (event) => {
   const title = data.title || 'Kairo';
   event.waitUntil(self.registration.showNotification(title, {
     body: data.body || '',
-    icon: 'icons/icon-192.png',
+    icon: 'icons/icon-192-v2.png',
     badge: 'icons/badge-96.png',
     tag: data.tag || 'kairo-summary',
     data: { url: data.url || './#/today' },

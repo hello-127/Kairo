@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Kairo</title>
-  <meta name="description" content="Uni and life planner with grades, rewards and stats">
+  <meta name="description" content="Uni and life planner: tasks, grades, study plans and rewards">
   <meta name="theme-color" content="#F5F1FA" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#130D1C" media="(prefers-color-scheme: dark)">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -12,16 +12,83 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Kairo">
   <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="icon" type="image/png" href="./icons/favicon.png">
-  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="./icons/favicon-v2.png">
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon-v2.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600;700&display=swap">
   <script src="./config.js"></script>
-  <script type="module" crossorigin src="./assets/index-DGpXv3g9.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-DctooPnn.css">
+  <style>
+    /* Opening animation: the Lake K forms over a dusk lake, then fades into the app */
+    #splash { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
+      background: linear-gradient(#C3A8EA 0%, #7046AE 46%, #2A1748 46.2%, #1C0F33 100%); transition: opacity .45s ease, transform .45s ease; }
+    #splash.out { opacity: 0; transform: scale(1.04); pointer-events: none; }
+    #splash svg { width: 132px; height: 132px; overflow: visible; filter: drop-shadow(0 10px 24px rgba(20,8,40,.45)); }
+    #splash .word { font: 700 30px 'Bricolage Grotesque', 'Figtree', system-ui, sans-serif; letter-spacing: -0.02em; color: #F7F1FC; opacity: 0; transform: translateY(8px);
+      animation: k-up .5s .75s cubic-bezier(.2,.8,.2,1) forwards; }
+    #splash .glow { position: absolute; width: 260px; height: 260px; border-radius: 50%; background: radial-gradient(rgba(252,227,180,.35), transparent 65%); top: calc(46% - 210px);
+      opacity: 0; animation: k-fade 1s .2s ease forwards; }
+    .k-ribbon { transform: translateY(-110px); animation: k-drop .55s .1s cubic-bezier(.2,.9,.25,1.15) forwards; }
+    .k-arm { stroke-dasharray: 44; stroke-dashoffset: 44; animation: k-draw .4s .5s cubic-bezier(.4,0,.2,1) forwards; }
+    .k-refl { opacity: 0; transform-origin: 48px 50px; transform: scaleY(.2); animation: k-refl .6s .8s ease-out forwards; }
+    .k-ripple { opacity: 0; animation: k-ripple 1.2s .9s ease-out forwards; }
+    .k-star { opacity: 0; transform-origin: 76px 12px; transform: scale(0); animation: k-star .5s 1s cubic-bezier(.3,1.6,.5,1) forwards; }
+    @keyframes k-drop { to { transform: translateY(0); } }
+    @keyframes k-draw { to { stroke-dashoffset: 0; } }
+    @keyframes k-refl { to { opacity: .6; transform: scaleY(1); } }
+    @keyframes k-ripple { 0% { opacity: 0; transform: translateX(-4px); } 40% { opacity: .7; } 100% { opacity: .5; transform: translateX(0); } }
+    @keyframes k-star { to { opacity: 1; transform: scale(1); } }
+    @keyframes k-up { to { opacity: 1; transform: none; } }
+    @keyframes k-fade { to { opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) { #splash * { animation-duration: .01s !important; animation-delay: 0s !important; } }
+    body.app-in #app { animation: app-in .5s cubic-bezier(.2,.8,.2,1); }
+    @keyframes app-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  </style>
+  <script type="module" crossorigin src="./assets/index-Ci5LrZfX.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-DgmecNHE.css">
 </head>
 <body>
+  <div id="splash" hidden aria-hidden="true">
+    <div class="glow"></div>
+    <svg viewBox="0 0 96 96">
+      <defs>
+        <linearGradient id="kbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C3A8EA"/><stop offset=".55" stop-color="#7046AE"/><stop offset="1" stop-color="#311B54"/></linearGradient>
+        <linearGradient id="kau" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#F3C77E"/><stop offset=".5" stop-color="#FCE3B4"/><stop offset="1" stop-color="#E9B260"/></linearGradient>
+        <clipPath id="kcl"><rect width="96" height="96" rx="22"/></clipPath>
+      </defs>
+      <g clip-path="url(#kcl)">
+        <rect width="96" height="96" fill="url(#kbg)"/>
+        <rect y="50" width="96" height="46" fill="#2A1748" opacity=".55"/>
+        <path d="M40 50 H90" stroke="#E7DBF6" stroke-width="1.6" opacity=".7"/>
+        <path class="k-refl" d="M48 49 L73 80" stroke="#B79ADF" stroke-width="12" stroke-linecap="round" fill="none"/>
+        <path class="k-ripple" d="M58 64 h10 M64 72 h9 M52 58 h7" stroke="#E7DBF6" stroke-width="1.6" stroke-linecap="round"/>
+        <path class="k-arm" d="M45 47 L71 16" stroke="#F7F1FC" stroke-width="12" stroke-linecap="round" fill="none"/>
+        <path class="k-ribbon" d="M24 0 H42 V80 L33 71.5 L24 80 Z" fill="url(#kau)"/>
+        <circle class="k-star" cx="76" cy="12" r="3" fill="#FCE3B4"/>
+      </g>
+    </svg>
+    <div class="word">Kairo</div>
+  </div>
+  <script>
+    (function () {
+      var el = document.getElementById('splash');
+      var standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+      var mobile = window.matchMedia('(max-width: 899px)').matches;
+      var seen = false;
+      try { seen = sessionStorage.getItem('kairo-splash') === '1'; sessionStorage.setItem('kairo-splash', '1'); } catch (e) {}
+      if (!(standalone || mobile) || seen) { window.__kairoReady = function () {}; el.remove(); return; }
+      el.hidden = false;
+      var t0 = Date.now(), ready = false, done = false;
+      function finish() {
+        if (done) return; done = true;
+        el.classList.add('out'); document.body.classList.add('app-in');
+        setTimeout(function () { el.remove(); document.body.classList.remove('app-in'); }, 500);
+      }
+      window.__kairoReady = function () { ready = true; setTimeout(finish, Math.max(0, 1500 - (Date.now() - t0))); };
+      el.addEventListener('click', function () { if (ready) finish(); });
+      setTimeout(finish, 5000);
+    })();
+  </script>
   <div id="app"></div>
 </body>
 </html>
